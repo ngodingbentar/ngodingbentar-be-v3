@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://waduduasdas345df:waduduasdas345df@ecommerce.iclbk.mongodb.net/dev",
+  "baseUrl": "http://localhost:5000"
+}
