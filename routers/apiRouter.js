@@ -439,6 +439,23 @@ apiRouter.get('/ongkir/:id/:weight',
   })
 )
 
+apiRouter.post('/ongkir/costs',
+  expressAsyncHandler(async (req, res) => {
+    var options = {
+      method: 'POST',
+      url: 'https://api.rajaongkir.com/starter/cost',
+      headers: {key: raja_ongkir_key, 'content-type': 'application/x-www-form-urlencoded'},
+      form: {origin: req.body.origin, destination: req.body.destination, weight: req.body.weight, courier: req.body.courier}
+    };
+
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+
+      res.send(JSON.parse(body))
+    });
+  })
+)
+
 apiRouter.post(
   '/shorten',
   expressAsyncHandler(async (req, res) => {
