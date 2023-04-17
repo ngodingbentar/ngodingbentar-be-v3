@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const expressAsyncHandler = require('express-async-handler');
 const request = require('request');
@@ -9,7 +10,6 @@ const Url = require('../models/urlModel');
 const Blog = require('../models/blogModel');
 const Categories = require('../models/categoriesModel');
 
-
 dotenv.config()
 
 const apiRouter = express.Router();
@@ -19,6 +19,14 @@ const weatherbit_key = process.env.WEATHERBIT
 const mongo = process.env.MONGODB_URL
 const mongo2 = process.env.MONGODB_URI
 const raja_ongkir_key = process.env.RAJA_ONGKIR
+
+
+apiRouter.get('/surah/:id',
+  expressAsyncHandler(async (req, res) => {
+    const dataSurah = JSON.parse(fs.readFileSync(`assets/surah/${req.params.id}.json`));
+    res.send(dataSurah)
+  })
+)
 
 apiRouter.get('/check-env',
   expressAsyncHandler(async (req, res) => {
