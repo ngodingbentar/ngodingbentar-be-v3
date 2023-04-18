@@ -19,7 +19,7 @@ const weatherbit_key = process.env.WEATHERBIT
 const mongo = process.env.MONGODB_URL
 const mongo2 = process.env.MONGODB_URI
 const raja_ongkir_key = process.env.RAJA_ONGKIR
-
+const binderbyte_Key = process.env.API_KEY_BINDERBYTE
 
 apiRouter.get('/surah/:id',
   expressAsyncHandler(async (req, res) => {
@@ -369,6 +369,20 @@ apiRouter.put(
     }
   })
 );
+
+apiRouter.get('/check-resi',
+  expressAsyncHandler(async (req, res) => {
+    var options = {
+      method: 'GET',
+      url: `https://api.binderbyte.com/v1/track?api_key=${binderbyte_Key}&courier=${req.query.kurir}&awb=${req.query.resi}`,
+    };
+    
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      res.send(JSON.parse(body))
+    });
+  })
+)
 
 apiRouter.get('/province',
   expressAsyncHandler(async (req, res) => {
