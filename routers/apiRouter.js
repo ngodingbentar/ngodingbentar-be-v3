@@ -9,6 +9,8 @@ const shortid = require('shortid');
 const Url = require('../models/urlModel');
 const Blog = require('../models/blogModel');
 const Categories = require('../models/categoriesModel');
+const cheerio = require('cheerio');
+const ytdl = require('ytdl-core');
 
 dotenv.config()
 
@@ -20,6 +22,91 @@ const mongo = process.env.MONGODB_URL
 const mongo2 = process.env.MONGODB_URI
 const raja_ongkir_key = process.env.RAJA_ONGKIR
 const binderbyte_Key = process.env.API_KEY_BINDERBYTE
+
+
+// YT-downloader
+let thisName = ''
+
+apiRouter.get('/videoInfo',
+  expressAsyncHandler(async (req, res) => {
+    const videoURL = req.query.videoURL;
+    const info = await ytdl.getInfo(videoURL);
+    res.status(200).json(info);
+  })
+)
+
+apiRouter.post('/setname',
+  expressAsyncHandler(async (req, res) => {
+    thisName = req.body.videoName
+    res.send('setname')
+  })
+)
+
+
+const getVideo = async url => {
+  const html = await axios.get(url);
+  const $ = cheerio.load(html.data);
+  const videoString = $("meta[property='og:video']").attr("content");
+  return videoString;
+};
+
+apiRouter.get('/ig',
+  expressAsyncHandler(async (req, res) => {
+    res.send('it works')
+  })
+)
+
+apiRouter.post('/ig',
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const videoLink = await getVideo(req.body.url);
+      if (videoLink !== undefined) {
+        res.json({ downloadLink: videoLink });
+      } else {
+        res.json({ error: "The link you have entered is invalid. " });
+      }
+    } catch (err) {
+      res.json({
+        error: "There is a problem with the link you have provided."
+      });
+    }
+  })
+)
+
+apiRouter.get('/ig2',
+  expressAsyncHandler(async (req, res) => {
+    const v = 'https://www.instagram.com/tv/COXYd0Dgk59/?utm_source=ig_web_copy_link'
+    const videoURL = req.query.videoURL;
+
+    try {
+      const videoLink = await getVideo(videoURL);
+      if (videoLink !== undefined) {
+        res.json({ downloadLink: videoLink });
+      } else {
+        res.json({ error: "The link you have entered is invalid. " });
+      }
+    } catch (err) {
+      res.json({
+        error: "There is a problem with the link you have provided."
+      });
+    }
+
+  })
+)
+
+apiRouter.get('/download',
+  expressAsyncHandler(async (req, res) => {
+    const videoURL = req.query.videoURL;
+    const itag = req.query.itag;
+    const myname=`${thisName}.mp4`
+    res.header("Content-Disposition",`attachment;\ filename=${myname}`);
+    ytdl(videoURL,{
+      filter: format => format.itag == itag
+    }).pipe(res);
+  })
+)
+
+
 
 apiRouter.get('/surah/:id',
   expressAsyncHandler(async (req, res) => {
