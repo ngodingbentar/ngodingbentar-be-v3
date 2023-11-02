@@ -22,7 +22,35 @@ const mongo = process.env.MONGODB_URL
 const mongo2 = process.env.MONGODB_URI
 const raja_ongkir_key = process.env.RAJA_ONGKIR
 const binderbyte_Key = process.env.API_KEY_BINDERBYTE
+const film_key = process.env.OMDB_API
 
+// OMDB
+apiRouter.get(
+  '/film',
+  expressAsyncHandler(async (req, res) => {
+    try{
+      const search = req.query.s || 'naruto';
+      var url = `http://www.omdbapi.com/?apikey=${film_key}&s=${search}`
+      const result = await axios.get(url);
+      res.send(result.data);
+    }catch(err){
+      res.send(err)
+    }
+  })
+);
+
+apiRouter.get(
+  '/film/:id',
+  expressAsyncHandler(async (req, res) => {
+    try{
+      var url = `http://www.omdbapi.com/?apikey=${film_key}&i=${req.params.id}`
+      const result = await axios.get(url);
+      res.send(result.data);
+    }catch(err){
+      res.send(err)
+    }
+  })
+);
 
 // YT-downloader
 let thisName = ''
