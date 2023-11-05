@@ -22,7 +22,7 @@ const connectDB = async () => {
   }
 };
 
-// connectDB();
+connectDB();
 
 
 app.use('/api/v1', apiRouter)

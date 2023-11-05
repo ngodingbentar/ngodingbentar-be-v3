@@ -23,6 +23,167 @@ const mongo2 = process.env.MONGODB_URI
 const raja_ongkir_key = process.env.RAJA_ONGKIR
 const binderbyte_Key = process.env.API_KEY_BINDERBYTE
 const film_key = process.env.OMDB_API
+const google_key = process.env.GOOGLE_SEARCH
+
+
+apiRouter.get('/google-maps',
+  expressAsyncHandler(async (req, res) => {
+    const query = req.query
+    console.log('query', query)
+
+    const options = {
+      method: 'POST',
+      url: 'https://google-api31.p.rapidapi.com/map',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': google_key,
+        'X-RapidAPI-Host': 'google-api31.p.rapidapi.com'
+      },
+      data : {
+        text: query.q,
+        place: '',
+        street: '',
+        city: '',
+        country: '',
+        state: '',
+        postalcode: '',
+        latitude: '',
+        longitude: '',
+        radius: ''
+      }
+    };
+    
+    try {
+      const response = await axios.request(options);
+      // console.log(response.data);
+      res.send(response.data)
+      // res.send('wadudu')
+    } catch (error) {
+      console.error(error);
+    }
+  })
+)
+
+apiRouter.get('/google-videos',
+  expressAsyncHandler(async (req, res) => {
+    const query = req.query
+    console.log('query', query)
+
+    const options = {
+      method: 'POST',
+      url: 'https://google-api31.p.rapidapi.com/videosearch',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': google_key,
+        'X-RapidAPI-Host': 'google-api31.p.rapidapi.com'
+      },
+      data : {
+        text: query.q,
+        safesearch: 'off',
+        timelimit: '',
+        duration: '',
+        resolution: '',
+        region: 'id',
+        max_results: 50
+      }
+    };
+    
+    try {
+      const response = await axios.request(options);
+      // console.log(response.data);
+      res.send(response.data)
+      // res.send('wadudu')
+    } catch (error) {
+      console.error(error);
+    }
+  })
+)
+
+apiRouter.get('/google-images',
+  expressAsyncHandler(async (req, res) => {
+    const query = req.query
+    console.log('query', query)
+
+    const options = {
+      method: 'POST',
+      url: 'https://google-api31.p.rapidapi.com/imagesearch',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': google_key,
+        'X-RapidAPI-Host': 'google-api31.p.rapidapi.com'
+      },
+      data : {
+        text: query.q,
+        safesearch: 'off',
+        region: 'ID',
+        color: '',
+        size: '',
+        type_image: '',
+        layout: '',
+        max_results: 100
+      }
+    };
+    
+    try {
+      const response = await axios.request(options);
+      // console.log(response.data);
+      res.send(response.data)
+      // res.send('wadudu')
+    } catch (error) {
+      console.error(error);
+    }
+  })
+)
+
+apiRouter.get('/google-search',
+  expressAsyncHandler(async (req, res) => {
+    const query = req.query
+    console.log('query', query)
+
+    const options = {
+      method: 'POST',
+      url: 'https://google-api31.p.rapidapi.com/websearch',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': google_key,
+        'X-RapidAPI-Host': 'google-api31.p.rapidapi.com'
+      },
+      data : {
+        text: query.q,
+        safesearch: 'off',
+        timelimit: '',
+        region: 'ID',
+        max_results: 20
+      }
+    };
+    
+    try {
+      const response = await axios.request(options);
+      // console.log(response.data);
+      res.send(response.data)
+      // res.send('wadudu')
+    } catch (error) {
+      console.error(error);
+    }
+  })
+)
+
+apiRouter.get(
+  '/google1',
+  expressAsyncHandler(async (req, res) => {
+    console.log('req', req.query)
+    const query = req.query
+    res.send('wadudu')
+    try{
+      // const search = req.query.s || 'naruto';
+      var url = `https://google-search74.p.rapidapi.com/?query=${query.q}&limit=${query.l}`
+      const result = await axios.get(url);
+      res.send(result.data);
+    }catch(err){
+      res.send(err)
+    }
+  })
+);
 
 // OMDB
 apiRouter.get(
