@@ -43,7 +43,7 @@ apiRouter.post('/midtrans-token',
         quantity: req.body.quantity,
       },
       transaction_details: {
-        order_id: req.body.id,
+        order_id: req.body.id + new Date().getTime(),
         gross_amount: req.body.price * req.body.quantity
       }
     }
