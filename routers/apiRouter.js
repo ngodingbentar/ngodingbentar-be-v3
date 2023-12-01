@@ -52,7 +52,7 @@ apiRouter.post('/midtrans-token',
       return res.json({ token })
     } catch (err) {
       res.json({
-        error: "There is a problem with the link you have provided."
+        error: err?.ApiResponse?.error_messages[0] || 'Something went wrong'
       });
     }
   })
