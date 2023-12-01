@@ -11,6 +11,8 @@ const Blog = require('../models/blogModel');
 const Categories = require('../models/categoriesModel');
 const cheerio = require('cheerio');
 const ytdl = require('ytdl-core');
+const midtransClient = require('midtrans-client');
+
 
 dotenv.config()
 
@@ -25,6 +27,39 @@ const binderbyte_Key = process.env.API_KEY_BINDERBYTE
 const film_key = process.env.OMDB_API
 const google_key = process.env.GOOGLE_SEARCH
 
+// MIDTRANS
+let snap = new midtransClient.Snap({
+  isProduction: false,
+  serverKey: process.env.MIDTRANS_SECRET,
+  clientKey: process.env.MIDTRANS_CLIENT
+})
+
+apiRouter.post('/midtrans-token',
+  expressAsyncHandler(async (req, res) => {
+    let paramemter = {
+      item_details: {
+        name: req.body.productName ,
+        price: req.body.price,
+        quantity: req.body.quantity,
+      },
+      transaction_details: {
+        order_id: req.body.id,
+        gross_amount: req.body.price * req.body.quantity
+      }
+    }
+    try {
+      const token = await snap.createTransactionToken(paramemter)
+      return res.json({ token })
+    } catch (err) {
+      res.json({
+        error: "There is a problem with the link you have provided."
+      });
+    }
+  })
+)
+
+
+// google
 
 apiRouter.get('/google-maps',
   expressAsyncHandler(async (req, res) => {
