@@ -13,7 +13,6 @@ const cheerio = require('cheerio');
 const ytdl = require('ytdl-core');
 const midtransClient = require('midtrans-client');
 
-
 dotenv.config()
 
 const apiRouter = express.Router();
@@ -26,6 +25,48 @@ const raja_ongkir_key = process.env.RAJA_ONGKIR
 const binderbyte_Key = process.env.API_KEY_BINDERBYTE
 const film_key = process.env.OMDB_API
 const google_key = process.env.GOOGLE_SEARCH
+
+// Playground
+apiRouter.get(
+  '/random/image/:square',
+  expressAsyncHandler(async (req, res) => {
+    const { square } = req.params;
+    const picsumUrl = `https://picsum.photos/${square}/${square}`;
+
+    try {
+      // Ambil gambar dari https://picsum.photos
+      const response = await axios.get(picsumUrl, { responseType: 'arraybuffer' });
+
+      // Atur header dan kirim gambar sebagai respons
+      res.set('Content-Type', response.headers['content-type']);
+      res.send(response.data);
+    } catch (error) {
+      console.error('Error fetching image from https://picsum.photos:', error.message);
+      res.status(500).send('Internal Server Error');
+    }
+  })
+);
+
+apiRouter.get(
+  '/random/image/:height/:width',
+  expressAsyncHandler(async (req, res) => {
+    const { width, height } = req.params;
+    const picsumUrl = `https://picsum.photos/${width}/${height}`;
+
+    try {
+      // Ambil gambar dari https://picsum.photos
+      const response = await axios.get(picsumUrl, { responseType: 'arraybuffer' });
+
+      // Atur header dan kirim gambar sebagai respons
+      res.set('Content-Type', response.headers['content-type']);
+      res.send(response.data);
+    } catch (error) {
+      console.error('Error fetching image from https://picsum.photos:', error.message);
+      res.status(500).send('Internal Server Error');
+    }
+  })
+);
+// 
 
 // MIDTRANS
 let snap = new midtransClient.Snap({
