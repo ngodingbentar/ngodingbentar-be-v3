@@ -12,6 +12,7 @@ const Categories = require('../models/categoriesModel');
 const cheerio = require('cheerio');
 const ytdl = require('ytdl-core');
 const midtransClient = require('midtrans-client');
+const instagramGetUrl = require("instagram-url-direct")
 
 dotenv.config()
 
@@ -307,7 +308,7 @@ apiRouter.post('/setname',
   })
 )
 
-
+// ig downloader
 const getVideo = async url => {
   const html = await axios.get(url);
   const $ = cheerio.load(html.data);
@@ -358,6 +359,26 @@ apiRouter.get('/ig2',
 
   })
 )
+
+apiRouter.get('/ig3',
+  expressAsyncHandler(async (req, res) => {
+    const videoURL = req.query.videoURL || '';
+    try {
+      const videoLink = await instagramGetUrl(videoURL)
+      if (videoLink !== undefined) {
+        res.json({ downloadLink: videoLink.url_list[0] });
+      } else {
+        res.json({ error: "The link you have entered is invalid. " });
+      }
+    } catch (err) {
+      res.json({
+        error: "There is a problem with the link you have provided."
+      });
+    }
+  })
+)
+
+// 
 
 apiRouter.get('/download',
   expressAsyncHandler(async (req, res) => {
