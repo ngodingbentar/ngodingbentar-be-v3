@@ -29,6 +29,12 @@ const google_key = process.env.GOOGLE_SEARCH
 
 // Playground
 apiRouter.get(
+  '/ping',
+  expressAsyncHandler(async (req, res) => {
+    res.json({ message: "pong" });
+  })
+);
+apiRouter.get(
   '/random/image/:square',
   expressAsyncHandler(async (req, res) => {
     const { square } = req.params;
